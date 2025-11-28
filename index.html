@@ -29,11 +29,12 @@
                 return;
             }
                 try {
+                    salida.innerHTML="lectura correcta del sensor";
                     accelerometer = new Accelerometer({ frequency: 60 });
                     accelerometer.addEventListener("reading", () => {
-                        vel.innerHTML=`Acceleration along the X-axis ${acl.x}`;
-                        vel.innerHTML+=`<br>Acceleration along the y-axis ${acl.y}`;
-                        vel.innerHTML+=`<br>Acceleration along the z-axis ${acl.z}`;
+                        vel.innerHTML=`Acceleration along the X-axis ${accelerometer.x}`;
+                        vel.innerHTML+=`<br>Acceleration along the y-axis ${accelerometer.y}`;
+                        vel.innerHTML+=`<br>Acceleration along the z-axis ${accelerometer.z}`;
                     });
                     acl.start();
 
@@ -53,5 +54,6 @@
     </script>
 </body>
 </html>
+
 
 
