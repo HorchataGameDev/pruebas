@@ -17,8 +17,7 @@
     <div id="vel"></div>
     
     <script defer>
-        console.log("lee script");
-        let acl = null;
+        let accelerometer = null;
         let salida = document.getElementById("salida");
         let vel = document.getElementById("vel");
         navigator.permissions.query({ name: "accelerometer" }).then((result) => {
@@ -29,18 +28,8 @@
                 return;
             }
                 try {
-                    accelerometer = new Accelerometer({ referenceFrame: "device" });
-                    accelerometer.addEventListener("error", (event) => {
-                        // Handle runtime errors.
-                        if (event.error.name === "NotReadableError") {
-                            console.log("No tiene sensor, usar el slider");
-                            salida.innerHTML("Error de acelerometro.");
-                            //poner slider
-                            //return;
-                        }
-                    });
-                    acl = new Accelerometer({ frequency: 60 });
-                    acl.addEventListener("reading", () => {
+                    accelerometer = new Accelerometer({ frequency: 60 });
+                    accelerometer.addEventListener("reading", () => {
                         vel.innerHTML=`Acceleration along the X-axis ${acl.x}`;
                         vel.innerHTML+=`<br>Acceleration along the y-axis ${acl.y}`;
                         vel.innerHTML+=`<br>Acceleration along the z-axis ${acl.z}`;
@@ -61,5 +50,4 @@
         });
     </script>
 </body>
-
 </html>
