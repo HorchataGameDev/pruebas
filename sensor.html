@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Pruebas</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        #salida, #vel{
+            padding:20px;
+            border:solid black 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="salida"></div>
+    <div id="vel"></div>
+    
+    <script defer>
+        let acl = null;
+        let salida = document.getElementById("salida");
+        let vel = document.getElementById("vel");
+        navigator.permissions.query({ name: "accelerometer" }).then((result) => {
+            if (result.state === "denied") {
+                console.log("No da permiso para usar el sensor, usar el slider de abajo");
+                salida.innerHTML("Permiso denegado para usar el sensor.");
+                //poner slider
+                return;
+            }
+                try {
+                    accelerometer = new Accelerometer({ referenceFrame: "device" });
+                    accelerometer.addEventListener("error", (event) => {
+                        // Handle runtime errors.
+                        if (event.error.name === "NotReadableError") {
+                            console.log("No tiene sensor, usar el slider");
+                            salida.innerHTML("Error de acelerometro.");
+                            //poner slider
+                            //return;
+                        }
+                    });
+                    acl = new Accelerometer({ frequency: 60 });
+                    acl.addEventListener("reading", () => {
+                        vel.innerHTML=`Acceleration along the X-axis ${acl.x}`;
+                        vel.innerHTML+=`<br>Acceleration along the y-axis ${acl.y}`;
+                        vel.innerHTML+=`<br>Acceleration along the z-axis ${acl.z}`;
+                    });
+                    acl.start();
+
+                } catch (error) {
+                    // Handle construction errors.
+                    if (error.name === "SecurityError") {
+                        // See the note above about permissions policy.
+                        salida.innerHTML="Sensor construction was blocked by a permissions policy.";
+                    } else if (error.name === "ReferenceError") {
+                        salida.innerHTML="Sensor is not supported by the User Agent.";
+                    } else {
+                        throw error;
+                    }
+                }
+        });
+    </script>
+</body>
+</html>
