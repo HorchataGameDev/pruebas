@@ -21,6 +21,7 @@
         let accelerometer = null;
         let salida = document.getElementById("salida");
         let vel = document.getElementById("vel");
+        salida.innerHTML="inicio";
         navigator.permissions.query({ name: "accelerometer" }).then((result) => {
             if (result.state === "denied") {
                 console.log("No da permiso para usar el sensor, usar el slider de abajo");
@@ -28,32 +29,32 @@
                 //poner slider
                 return;
             }
-                try {
-                    salida.innerHTML="lectura correcta del sensor";
-                    accelerometer = new Accelerometer({ frequency: 60 });
-                    accelerometer.addEventListener("reading", () => {
-                        vel.innerHTML=`Acceleration along the X-axis ${accelerometer.x}`;
-                        vel.innerHTML+=`<br>Acceleration along the y-axis ${accelerometer.y}`;
-                        vel.innerHTML+=`<br>Acceleration along the z-axis ${accelerometer.z}`;
-                    });
-                    acl.start();
-
-                } catch (error) {
-                    // Handle construction errors.
-                    if (error.name === "SecurityError") {
-                        // See the note above about permissions policy.
-                        salida.innerHTML="Sensor construction was blocked by a permissions policy.";
-                    } else if (error.name === "ReferenceError") {
-                        salida.innerHTML="Sensor is not supported by the User Agent.";
-                    } else {
-                        salida.innerHTML=error;
-                        throw error;
-                    }
+            try {
+                salida.innerHTML="lectura correcta del sensor";
+                accelerometer = new Accelerometer({ frequency: 60 });
+                accelerometer.addEventListener("reading", () => {
+                    vel.innerHTML=`Acceleration along the X-axis ${accelerometer.x}`;
+                    vel.innerHTML+=`<br>Acceleration along the y-axis ${accelerometer.y}`;
+                    vel.innerHTML+=`<br>Acceleration along the z-axis ${accelerometer.z}`;
+                });
+                accelerometer.start();
+            } catch (error) {
+                // Handle construction errors.
+                if (error.name === "SecurityError") {
+                    // See the note above about permissions policy.
+                    salida.innerHTML="Sensor construction was blocked by a permissions policy.";
+                } else if (error.name === "ReferenceError") {
+                    salida.innerHTML="Sensor is not supported by the User Agent.";
+                } else {
+                    salida.innerHTML="Ha ocurrido un error completamente diferente "+error.name;
+                    throw error;
                 }
+            }
         });
     </script>
 </body>
 </html>
+
 
 
 
