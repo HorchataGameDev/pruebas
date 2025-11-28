@@ -45,6 +45,7 @@
                     } else if (error.name === "ReferenceError") {
                         salida.innerHTML="Sensor is not supported by the User Agent.";
                     } else {
+                        salida.innerHTML=error;
                         throw error;
                     }
                 }
@@ -52,4 +53,5 @@
     </script>
 </body>
 </html>
+
 
