@@ -6,7 +6,7 @@
     <title>Pruebas</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <style>
-        #salida, #vel{
+        #salida, #vel, #permiso{
             padding:20px;
             border:solid black 5px;
         }
@@ -14,6 +14,7 @@
     <link rel="shortcut icon" href="#" />
 </head>
 <body>
+    <div id="permiso">permiso: esperando</div>
     <div id="salida"></div>
     <div id="vel"></div>
     
@@ -21,8 +22,13 @@
         let accelerometer = null;
         let salida = document.getElementById("salida");
         let vel = document.getElementById("vel");
+        let permiso = document.getElementById("permiso");
+        let maxX = 0;
+        let maxY = 0;
+        let maxZ = 0;
         salida.innerHTML="inicio";
         navigator.permissions.query({ name: "accelerometer" }).then((result) => {
+            permiso.innerHTML="permiso: "+result.state;
             if (result.state === "denied") {
                 console.log("No da permiso para usar el sensor, usar el slider de abajo");
                 salida.innerHTML("Permiso denegado para usar el sensor.");
@@ -33,11 +39,22 @@
                 salida.innerHTML="lectura correcta del sensor";
                 accelerometer = new Accelerometer({ frequency: 60 });
                 accelerometer.addEventListener("reading", () => {
-                    vel.innerHTML=`Acceleration along the X-axis ${accelerometer.x}`;
-                    vel.innerHTML+=`<br>Acceleration along the y-axis ${accelerometer.y}`;
-                    vel.innerHTML+=`<br>Acceleration along the z-axis ${accelerometer.z}`;
+                    if(accelerometer.x > maxX){
+                        maxX = accelerometer.x;
+                    }
+                    if(accelerometer.y > maxY){
+                        maxY = accelerometer.y;
+                    }
+                    if(accelerometer.z > maxZ){
+                        maxZ = accelerometer.z;
+                    }
+                    
+                    vel.innerHTML=`X-axis peak `+maxX;
+                    vel.innerHTML+=`<br>Y-axis peak `+maxY;
+                    vel.innerHTML+=`<br>Z-axis peak `+maxZ;
                 });
                 accelerometer.start();
+                
             } catch (error) {
                 // Handle construction errors.
                 if (error.name === "SecurityError") {
@@ -54,7 +71,3 @@
     </script>
 </body>
 </html>
-
-
-
-
